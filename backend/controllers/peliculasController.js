@@ -60,7 +60,7 @@ peliculasController.putPeliculas = async (req, res) => {
     res.json({message: "brand saved"});
 }
 
-brandController.deletebrand = async (req, res) => {
+peliculaController.deletePelicula = async (req, res) => {
     const deletebrand = await brandModel.findByIdAndDelete(req.params.id);
       if (!deletebrand) {
         return res.status(404).json({ message: "brand dont find" });
