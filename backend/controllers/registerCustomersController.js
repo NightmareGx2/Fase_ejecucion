@@ -1,8 +1,7 @@
 import nodemailer from "nodemailer"; 
 import crypto from "crypto"; 
 import jsonwebtoken from "jsonwebtoken"; 
-import bcryptjs from "bcryptjs"; 
-
+import bcryptjs from "bcryptjs";  
 import clientsModel from "../models/customers.js";
 import { config } from "../config.js";
 
@@ -21,16 +20,14 @@ registerClientsController.register = async (req, res) => {
   } = req.body;
 
   try {
-    //1- Verificar si el cliente ya existe
+  
     const existsClient = await clientsModel.findOne({ email });
     if (existsClient) {
       return res.json({ message: "Client already exists" });
     }
 
-    //2- Encriptar contraseña
     const passwordHash = await bcryptjs.hash(password, 10);
-
-    //3- Guardamos al nuevo cliente
+   
     const newClient = new clientsModel({
       name,
       name,
@@ -55,7 +52,7 @@ registerClientsController.register = async (req, res) => {
 
     res.cookie("verificationToken", tokenCode, { maxAge: 2 * 60 * 60 * 1000 });
 
-    //Enviar correo
+    //correo
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -74,7 +71,7 @@ registerClientsController.register = async (req, res) => {
         "expira en 1 hora",
     };
 
-    // 3- Enviar el correo
+    //Para enviar correo
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) console.log("error" + error);
       res.json({ message: "Email enviado" + info });
@@ -85,8 +82,6 @@ registerClientsController.register = async (req, res) => {
     res.json({ message: "Error" + error });
   }
 };
-
-//verificando codigo 
 
 registerClientsController.verifyCodeEmail = async (req, res) => {
   const { verificationCodeRequest } = req.body;
